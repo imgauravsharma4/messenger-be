@@ -1,0 +1,23 @@
+{
+  "name": "messenger-be",
+  "version": "1.0.0",
+  "description": "Chat message application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imgauravsharma4/messenger-be.git"
+  },
+  "keywords": [
+    "chat",
+    "message"
+  ],
+  "author": "Gaurav Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imgauravsharma4/messenger-be/issues"
+  },
+  "homepage": "https://github.com/imgauravsharma4/messenger-be#readme"
+}
