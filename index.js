@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 const indexRouter = require('./routes/index');
 
 app.use('/', indexRouter);
-// require('./models/helpers/InitializeConnectionHelper')(server, app);
+require('./models/helpers/InitializeConnectionHelper')(server, app);
 
 /**
  * Error Handler.
