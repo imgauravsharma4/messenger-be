@@ -10,6 +10,11 @@ exports.newMessage = async (req, res) => {
   try {
     const { body } = req;
     body.senderId = req.user.id;
+    if (Number(body.receiverId) === Number(body.senderId)) {
+      return res
+        .status(resCode.HTTP_OK)
+        .json(OPTIONS.genRes(resCode.HTTP_OK, { success: true, data: [] }));
+    }
     const response = await MessageRepository.createMessage(req.body);
     if (!response.success) {
       return res

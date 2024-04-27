@@ -11,6 +11,11 @@ exports.newConversation = async (req, res) => {
   try {
     const { body } = req;
     body.senderId = req.user.id;
+    if (Number(body.receiverId) === Number(body.senderId)) {
+      return res
+        .status(resCode.HTTP_OK)
+        .json(OPTIONS.genRes(resCode.HTTP_OK, { success: true, data: [] }));
+    }
     const response = await ConversationRepository.createConversation(req.body);
     if (!response.success) {
       return res
@@ -44,12 +49,12 @@ exports.getAll = async (req, res) => {
         {
           model: db.User,
           as: 'receiver',
-          attributes: ['id'],
+          attributes: ['id', 'firstName', 'email', 'userName'],
         },
         {
           model: db.User,
           as: 'sender',
-          attributes: ['id'],
+          attributes: ['id', 'firstName', 'email', 'userName'],
         },
       ],
     };
@@ -86,12 +91,12 @@ exports.getOne = async (req, res) => {
         {
           model: db.User,
           as: 'receiver',
-          attributes: ['id'],
+          attributes: ['id', 'firstName', 'email', 'userName'],
         },
         {
           model: db.User,
           as: 'sender',
-          attributes: ['id'],
+          attributes: ['id', 'firstName', 'email', 'userName'],
         },
       ],
     };

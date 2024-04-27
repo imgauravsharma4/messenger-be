@@ -50,3 +50,6 @@ exports.createOrUpdateUser = async (data) => {
     throw new Error(e);
   }
 };
+
+exports.findOne = async (query) => await User.findOne(query);
+exports.findAll = async (query) => await User.findAll(query);
