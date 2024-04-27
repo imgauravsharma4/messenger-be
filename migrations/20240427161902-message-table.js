@@ -11,37 +11,33 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('User', {
+    await queryInterface.createTable('Message', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userName: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      senderId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'User', key: 'id' },
       },
-      role: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      receiverId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'User', key: 'id' },
       },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING,
+      conversationId: {
+        type: Sequelize.INTEGER,
+        references: { model: 'Conversation', key: 'id' },
       },
-      firstName: {
-        allowNull: false,
+      message: {
         type: Sequelize.STRING,
-      },
-      password: {
-        type: Sequelize.TEXT,
         allowNull: true,
       },
       status: {
         allowNull: false,
         type: Sequelize.STRING,
-        defaultValue: options.defaultStatus.PENDING,
+        defaultValue: options.defaultStatus.ACTIVE,
       },
       updatedAt: Sequelize.DATE,
       createdAt: Sequelize.DATE,
