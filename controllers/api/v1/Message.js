@@ -1,39 +1,21 @@
+const MessageRepository = require('../../../models/repositories/MessageRepository');
 const OPTIONS = require('../../../config/options');
-const UserRepository = require('../../../models/repositories/UserRepository');
 const ErrorHandleHelper = require('../../../models/helpers/ErrorHandleHelper');
 
 const { resCode } = require('../../../config/options');
-const options = require('../../../config/options');
+const db = require('../../../models');
 
 const { customErrorLogger } = ErrorHandleHelper;
-
-exports.login = async (req, res) => {
+exports.newMessage = async (req, res) => {
   try {
-    const response = await UserRepository.checkUser(req.body);
-    if (!response.success) {
+    const { body } = req;
+    body.senderId = req.user.id;
+    if (Number(body.receiverId) === Number(body.senderId)) {
       return res
-        .status(resCode.HTTP_BAD_REQUEST)
-        .json(OPTIONS.genRes(resCode.HTTP_BAD_REQUEST, response.message));
+        .status(resCode.HTTP_OK)
+        .json(OPTIONS.genRes(resCode.HTTP_OK, { success: true, data: [] }));
     }
-    return res
-      .status(resCode.HTTP_OK)
-      .json(OPTIONS.genRes(resCode.HTTP_OK, response));
-  } catch (e) {
-    customErrorLogger(e);
-    return res
-      .status(resCode.HTTP_INTERNAL_SERVER_ERROR)
-      .json(
-        OPTIONS.genRes(
-          resCode.HTTP_INTERNAL_SERVER_ERROR,
-          OPTIONS.errorMessage.SERVER_ERROR,
-          OPTIONS.errorTypes.INTERNAL_SERVER_ERROR
-        )
-      );
-  }
-};
-exports.signup = async (req, res) => {
-  try {
-    const response = await UserRepository.createOrUpdateUser(req.body);
+    const response = await MessageRepository.createMessage(req.body);
     if (!response.success) {
       return res
         .status(resCode.HTTP_BAD_REQUEST)
@@ -56,23 +38,26 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.getUser = async (req, res) => {
+exports.getAll = async (req, res) => {
   try {
-    const response = await UserRepository.findOne({
+    const query = {
       where: {
-        id: req.user.id,
+        conversationId: req.params.id,
       },
-    });
-    if (!response) {
-      return res
-        .status(resCode.HTTP_BAD_REQUEST)
-        .json(
-          OPTIONS.genRes(
-            resCode.HTTP_BAD_REQUEST,
-            options.errorMessage.DATA_NOT_FOUND('User')
-          )
-        );
-    }
+      include: [
+        {
+          model: db.User,
+          as: 'receiver',
+          attributes: ['id'],
+        },
+        {
+          model: db.User,
+          as: 'sender',
+          attributes: ['id'],
+        },
+      ],
+    };
+    const response = await MessageRepository.findAll(query);
     return res
       .status(resCode.HTTP_OK)
       .json(OPTIONS.genRes(resCode.HTTP_OK, response));
