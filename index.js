@@ -5,6 +5,8 @@ const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 const lusca = require('lusca');
 const cors = require('cors');
+const { Server } = require('socket.io');
+const { createServer } = require('http');
 require('dotenv').config();
 /**
  * Create Express server.
@@ -12,7 +14,7 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(
   session({
     resave: false,
@@ -20,11 +22,29 @@ app.use(
     secret: 'SECRET',
   })
 );
+
+/**
+ * Socket configuration.
+ */
+// require('./models/helpers/InitializeConnectionHelper')(server, app);
+
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('Connected', socket.id);
+});
 /**
  * Start Express server.
  */
 app.set('port', process.env.PORT || 3000);
-const server = app.listen(app.get('port'), () => {
+server.listen(app.get('port'), () => {
   console.log(
     '%s App is running at http://localhost:%d in %s mode',
     chalk.green('✓'),
@@ -60,7 +80,6 @@ app.use((req, res, next) => {
 const indexRouter = require('./routes/index');
 
 app.use('/', indexRouter);
-require('./models/helpers/InitializeConnectionHelper')(server, app);
 
 /**
  * Error Handler.
