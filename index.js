@@ -15,13 +15,13 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({ origin: true }));
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: true,
-    secret: 'SECRET',
-  })
-);
+// app.use(
+//   session({
+//     resave: false,
+//     saveUninitialized: true,
+//     secret: 'SECRET',
+//   })
+// );
 
 /**
  * Socket configuration.
