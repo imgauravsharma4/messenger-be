@@ -5,6 +5,7 @@ const ErrorHandleHelper = require('../../../models/helpers/ErrorHandleHelper');
 
 const { resCode } = require('../../../config/options');
 const db = require('../../../models');
+const options = require('../../../config/options');
 
 const { customErrorLogger } = ErrorHandleHelper;
 exports.newConversation = async (req, res) => {
@@ -44,6 +45,7 @@ exports.getAll = async (req, res) => {
     const query = {
       where: {
         [Op.or]: [{ senderId: req.user.id }, { receiverId: req.user.id }],
+        status: options.defaultStatus.ACTIVE,
       },
       include: [
         {
