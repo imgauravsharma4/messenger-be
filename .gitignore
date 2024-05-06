@@ -6,6 +6,7 @@ lib-cov
 *.pid
 *.gz
 *.swp
+.vercel
 yarn.lock
 
 pids

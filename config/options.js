@@ -139,6 +139,10 @@ const options = {
   genOtp: UtilHelper.genOtp,
   genRes: UtilHelper.genRes,
   generateCloudFrontUrl: UtilHelper.generateCloudFrontUrl,
+  server: {
+    PRODUCTION: 'production',
+    DEVELOPMENT: 'development',
+  },
 };
 
 module.exports = options;

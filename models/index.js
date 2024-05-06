@@ -9,12 +9,15 @@ require('dotenv').config();
 const env = process.env.NODE_ENV || 'development';
 const config = require(`${__dirname}/../config/config.json`)[env];
 const chalk = require('chalk');
+const { options } = require('../config/options');
 
 const db = {};
 let sequelize;
 (async () => {
-  if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  if (env === options.server.PRODUCTION) {
+    config.dialectModule = require('mysql2');
+    console.log('config', config);
+    sequelize = new Sequelize(process.env.DATABASE_URL, config);
   } else {
     sequelize = new Sequelize(
       process.env[config.database],

@@ -1,5 +1,4 @@
 const express = require('express');
-const session = require('express-session');
 const bodyParser = require('body-parser');
 const chalk = require('chalk');
 const errorHandler = require('errorhandler');
@@ -14,14 +13,14 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL }));
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: true,
-    secret: 'SECRET',
-  })
-);
+app.use(cors({ origin: true }));
+// app.use(
+//   session({
+//     resave: false,
+//     saveUninitialized: true,
+//     secret: 'SECRET',
+//   })
+// );
 
 /**
  * Socket configuration.
@@ -37,9 +36,27 @@ const io = new Server(server, {
   },
 });
 
+const users = [];
 io.on('connection', (socket) => {
-  console.log('Connected', socket.id);
+  socket.on('addUsers', (userId) => {
+    users.filter((user) => user.userId !== null);
+    const isUserExist = users.find((user) => user.userId === userId);
+    if (!isUserExist) {
+      const user = { userId, socketId: socket.id };
+      users.push(user);
+      io.emit('getUsers', users);
+    }
+  });
+
+  socket.on('sendMessage', (payload) => {
+    const receiver = users.find((user) => user.userId === payload.receiverId);
+    const sender = users.find((user) => user.userId === payload.senderId);
+    if (receiver && sender) {
+      io.to(receiver.socketId).to(sender.socketId).emit('getMessage', payload);
+    }
+  });
 });
+
 /**
  * Start Express server.
  */
