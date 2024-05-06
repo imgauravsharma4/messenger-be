@@ -9,7 +9,7 @@ require('dotenv').config();
 const env = process.env.NODE_ENV || 'development';
 const config = require(`${__dirname}/../config/config.json`)[env];
 const chalk = require('chalk');
-const { options } = require('../config/options');
+const options = require('../config/options');
 
 const db = {};
 let sequelize;
