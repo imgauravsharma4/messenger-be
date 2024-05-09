@@ -51,12 +51,12 @@ exports.getAll = async (req, res) => {
         {
           model: db.User,
           as: 'receiver',
-          attributes: ['id', 'firstName', 'email', 'userName'],
+          attributes: ['id', 'fullName', 'email', 'userName'],
         },
         {
           model: db.User,
           as: 'sender',
-          attributes: ['id', 'firstName', 'email', 'userName'],
+          attributes: ['id', 'fullName', 'email', 'userName'],
         },
       ],
     };
@@ -93,12 +93,12 @@ exports.getOne = async (req, res) => {
         {
           model: db.User,
           as: 'receiver',
-          attributes: ['id', 'firstName', 'email', 'userName'],
+          attributes: ['id', 'fullName', 'email', 'userName'],
         },
         {
           model: db.User,
           as: 'sender',
-          attributes: ['id', 'firstName', 'email', 'userName'],
+          attributes: ['id', 'fullName', 'email', 'userName'],
         },
       ],
     };
